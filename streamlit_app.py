@@ -1,38 +1,104 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
 import streamlit as st
+import pickle
+import sklearn
+import pandas as pd
+import numpy as np
+from PIL import Image
+model3 = pickle.load(open('lstm.sav', 'rb'))
 
-"""
-# Welcome to Streamlit!
-
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
-
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+st.title('Stock Prediction')
+st.sidebar.header('Stock Data')
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+# FUNCTION
+def user_report():
+    open = st.sidebar.number_input('open', 50,10000, 100 )
+    high = st.sidebar.number_input('high', 50,10000, 100 )
+    low = st.sidebar.number_input('low', 50,10000, 100 )
+    close = st.sidebar.number_input('close', 50,10000, 100 )
+    qty = st.sidebar.number_input('qty', 50,10000000, 100 )
+    turn = st.sidebar.number_input('turn', 50,10000, 100 )
+    notrade = st.sidebar.number_input('notrade', 50,10000, 100 )
+    delivqty = st.sidebar.number_input('delivqty', 50,10000, 100 )
+    percdelqty = st.sidebar.number_input('percdelqty', 50,10000000, 100 )
+    tempmax = st.sidebar.number_input('tempmax', 50,10000, 100 )
+    tempmin = st.sidebar.number_input('tempmin', 50,10000000, 100 )
+    temp = st.sidebar.number_input('temp', 50,10000, 100 )
+    feelmax = st.sidebar.number_input('feelmax', 50,10000, 100 )
+    feelmin = st.sidebar.number_input('feelmin', 50,10000, 100 )
+    feel = st.sidebar.number_input('feel', 50,10000, 100 )
+    dew = st.sidebar.number_input('dew', 50,10000000, 100 )
+    humid = st.sidebar.number_input('humid', 50,10000, 100 )
+    wind = st.sidebar.number_input('wind', 50,10000, 100 )
+    winddir = st.sidebar.number_input('winddir', 50,10000, 100 )
+    cloud = st.sidebar.number_input('cloud', 50,10000, 100 )
+    visi = st.sidebar.number_input('visi', 50,10000000, 100 )
+    solrat = st.sidebar.number_input('solrat', 50,10000, 100 )
+    solen = st.sidebar.number_input('solen', 50,10000, 100 )
+    uv = st.sidebar.number_input('uv', 50,10000, 100 )
+    moonage = st.sidebar.number_input('moonage', 50,10000, 100 )
+    rah = st.sidebar.number_input('rah', 50,10000000, 100 )
+    ram = st.sidebar.number_input('ram', 50,10000, 100 )
+    ras = st.sidebar.number_input('ras', 50,10000, 100 )
+    decm = st.sidebar.number_input('decm', 50,10000, 100 )
+    decs = st.sidebar.number_input('decs', 50,10000, 100 )
+    rise = st.sidebar.number_input('rise', 50,10000000, 100 )
+    cul = st.sidebar.number_input('cul', 50,10000, 100 )
+    set = st.sidebar.number_input('set', 50,10000, 100 )
+    appmag = st.sidebar.number_input('appmag', 50,10000, 100 )
+    phase = st.sidebar.number_input('phase', 50,10000, 100 )
+    earthdist = st.sidebar.number_input('earthdist', 50,10000000, 100 )
+    sundist = st.sidebar.number_input('sundist', 50,10000, 100 )
+    angdiam = st.sidebar.number_input('angdiam', 50,10000, 100 )
+    solarsepde = st.sidebar.number_input('solarsepde', 50,10000, 100 )
+    const = st.sidebar.number_input('const', 50,10000, 100 )
 
-    Point = namedtuple('Point', 'x y')
-    data = []
 
-    points_per_turn = total_points / num_turns
+    user_report_data = {
+      'open':open, 'high':high, 'low':low, 'close':close, 'qty':qty, 'turn':turn,
+      'notrade':notrade,
+      'delivqty':delivqty,
+      'percdelqty':percdelqty,
+      'tempmax':tempmax,
+      'tempmin':tempmin,
+      'temp':temp,
+      'feelmax':feelmax,
+      'feelmin':feelmin,
+      'feel':feel,
+      'dew':dew,
+      'humid':humid,
+      'wind':wind,
+      'winddir':winddir,
+      'cloud':cloud,
+      'visi':visi,
+      'solrat':solrat,
+      'solen':solen,
+      'uv':uv,
+      'moonage':moonage,
+      'rah':rah,
+      'ram':ram,
+      'ras':ras,
+      'decm':decm,
+      'decs':decs,
+      'rise':rise,
+      'cul':cul,
+      'set':set,
+      'appmag':appmag,
+      'phase':phase,
+      'earthdist':earthdist,
+      'sundist':sundist,
+      'angdiam':angdiam,
+      'solarsepde':solarsepde,
+      'const':const
+      }
+    report_data = pd.DataFrame(user_report_data, index=[0])
+    return report_data
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+user_data = user_report()
+st.header('Stock Data')
+st.write(user_data)
+
+tomclose = model3.predict(user_data)
+st.subheader('Tomorrow Close')
+st.subheader('Rs'+str(tomclose))
