@@ -7,3 +7,4 @@ keras
 tensorflow
 matplotlib
 openpyxl
+xgboost
