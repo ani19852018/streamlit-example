@@ -4,7 +4,7 @@ import sklearn
 import pandas as pd
 import numpy as np
 from PIL import Image
-model3 = pickle.load(open('xgb.sav', 'rb'))
+model3 = pickle.load(open('xgb_latest.sav', 'rb'))
 
 dataset=pd.read_excel('stock_data.xlsx')
 X= dataset.drop(['Symbol', 'Series','YesterdayDate','datetime','datetime2','Target1','Target2','Target3','Target4','Target5','Target6','Target7','Target8','TodayOpenSeHighPercent','TodayOpenSeLowPer'],axis = 1)
@@ -105,7 +105,7 @@ def user_report():
 user_data = user_report()
 st.header('Stock Data')
 st.write(user_data)
-new = model3.predict(X_train)
+
 tomclose = model3.predict(user_data)
 st.subheader('Tomorrow Close')
-st.subheader(new)
+st.subheader(tomclose)
