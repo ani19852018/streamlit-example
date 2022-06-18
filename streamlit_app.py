@@ -4,7 +4,7 @@ import sklearn
 import pandas as pd
 import numpy as np
 from PIL import Image
-model3 = pickle.load(open('lstm.sav', 'rb'))
+model3 = pickle.load(open('xgb.sav', 'rb'))
 
 st.title('Stock Prediction')
 st.sidebar.header('Stock Data')
