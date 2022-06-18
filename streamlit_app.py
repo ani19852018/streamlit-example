@@ -6,6 +6,13 @@ import numpy as np
 from PIL import Image
 model3 = pickle.load(open('xgb.sav', 'rb'))
 
+dataset=pd.read_excel('stock_data.xlsx')
+X= dataset.drop(['Symbol', 'Series','YesterdayDate','datetime','datetime2','Target1','Target2','Target3','Target4','Target5','Target6','Target7','Target8','TodayOpenSeHighPercent','TodayOpenSeLowPer'],axis = 1)
+Y = dataset['Target2']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state = 1)
+
 st.title('Stock Prediction')
 st.sidebar.header('Stock Data')
 
@@ -98,7 +105,7 @@ def user_report():
 user_data = user_report()
 st.header('Stock Data')
 st.write(user_data)
-
+new = model.predict(X_train)
 tomclose = model3.predict(user_data)
 st.subheader('Tomorrow Close')
-st.subheader(tomclose)
+st.subheader(new)
