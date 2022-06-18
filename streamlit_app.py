@@ -105,7 +105,7 @@ def user_report():
 user_data = user_report()
 st.header('Stock Data')
 st.write(user_data)
-new = model.predict(X_train)
+new = model3.predict(X_train)
 tomclose = model3.predict(user_data)
 st.subheader('Tomorrow Close')
 st.subheader(new)
