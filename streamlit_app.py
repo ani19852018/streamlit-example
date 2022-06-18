@@ -101,4 +101,4 @@ st.write(user_data)
 
 tomclose = model3.predict(user_data)
 st.subheader('Tomorrow Close')
-st.subheader('Rs'+str(tomclose))
+st.subheader(tomclose)
