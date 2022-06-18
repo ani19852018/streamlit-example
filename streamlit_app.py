@@ -99,6 +99,6 @@ user_data = user_report()
 st.header('Stock Data')
 st.write(user_data)
 
-tomclose = model3.predict(user_data)
+tomclose = model3.predict_proba(user_data)
 st.subheader('Tomorrow Close')
 st.subheader('Rs'+str(tomclose))
